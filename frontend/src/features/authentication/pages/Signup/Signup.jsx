@@ -1,0 +1,71 @@
+import { Link, useNavigate } from "react-router-dom";
+import { Box } from "../../components/Box/Box";
+import { Button } from "../../../../components/Button/Button";
+import { Input } from "../../../../components/Input/Input";
+import classes from "./Signup.module.scss";
+import { Separator } from "../../components/Separator/Separator";
+import { useState } from "react";
+import { useAuthentication } from "../../contexts/AuthenticationContextProvider";
+
+export function Signup() {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signup } = useAuthentication();
+  const navigate = useNavigate();
+
+  const doSignup = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const email = e.currentTarget.email.value;
+    const password = e.currentTarget.password.value;
+
+    try {
+      await signup(email, password);
+      navigate("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An unknown error occured.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className={classes.root}>
+      <Box>
+        <h1>Sign up</h1>
+
+        <form onSubmit={doSignup}>
+          <Input type="email" id="email" label="Email" />
+          <Input type="password" id="password" label="Password" />
+
+          {errorMessage && (
+            <p className={classes.error}>{errorMessage}</p>
+          )}
+
+          <p className={classes.disclaimer}>
+            By clicking Agree & Join or Continue, you agree to Instagram's{" "}
+            <a href="">User Agreement</a>,{" "}
+            <a href="">Privacy Policy</a>, and{" "}
+            <a href="">Cookie Policy</a>
+          </p>
+
+          <Button type="submit" disabled={isLoading}>
+            Create New Account
+          </Button>
+        </form>
+
+        <Separator>Or</Separator>
+
+        <div className={classes.register}>
+          Already on Instagram?{" "}
+          <Link to="/authentication/login">Sign in</Link>
+        </div>
+      </Box>
+    </div>
+  );
+}

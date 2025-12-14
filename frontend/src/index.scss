@@ -1,0 +1,54 @@
+:root {
+  --primary-color: rgb(12, 16, 20);
+  --dark-prim: rgb(37, 41, 46);
+  --bg-color: #56575C;
+  --web-text: #FEFFFE;
+  --nav-text: #e6ebee;
+  --box-color: #2F3035;
+  --hover-col: #D9D5F2;
+  --active-col: #FEFFFE;
+}
+
+body {
+  background: var(--primary-color);
+  color: var(--web-text); 
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+}
+
+html {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-color);
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+button {
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+strong {
+  font-weight: 600;
+}

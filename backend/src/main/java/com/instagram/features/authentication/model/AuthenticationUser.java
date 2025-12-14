@@ -1,0 +1,162 @@
+package com.instagram.features.authentication.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.instagram.features.feed.model.Post;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity(name = "users")
+public class AuthenticationUser {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull
+    @Email
+    @Column(unique = true)
+    private String email;
+    private Boolean emailVerified = false;
+    private String emailVerificationToken = null;
+    private LocalDateTime emailVerificationTokenExpiryDate = null;
+    @JsonIgnore
+    private String password;
+    private String passwordResetToken = null;
+    private LocalDateTime passwordResetTokenExpiryDate = null;
+    private String firstName=null;
+    private String lastName=null;
+    private boolean profileComplete=false; // to check the profile is completed or not
+    private String profilePicture=null;
+    
+    @JsonIgnore
+    @OneToMany( mappedBy = "author" ,cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Post> posts;// cascadeType.ALL is used to delete all posts of user if we delete user... orphanRemoval is used to delete all unlink posts 
+    
+    
+    public AuthenticationUser(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    
+    
+    public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+		updateProfileComplitionStatus(); // check completion status 
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+		updateProfileComplitionStatus(); // check completion status 
+	}
+
+	public boolean isProfileComplete() {
+		return profileComplete;
+	}
+	
+	public void setProfileComplete(boolean profileComplete) {
+		this.profileComplete = profileComplete;
+	}
+    
+    
+    public AuthenticationUser() {
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    
+     private void updateProfileComplitionStatus() // checks the completion status.. call on setters of every vars
+     {
+    	 this.profileComplete = (this.firstName!=null && this.lastName!=null);
+     }
+
+    public String getEmailVerificationToken() {
+        return emailVerificationToken;
+    }
+
+    public void setEmailVerificationToken(String emailVerificationToken) {
+        this.emailVerificationToken = emailVerificationToken;
+    }
+
+    public LocalDateTime getEmailVerificationTokenExpiryDate() {
+        return emailVerificationTokenExpiryDate;
+    }
+
+    public void setEmailVerificationTokenExpiryDate(LocalDateTime emailVerificationTokenExpiryDate) {
+        this.emailVerificationTokenExpiryDate = emailVerificationTokenExpiryDate;
+    }
+
+    public String getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
+    }
+
+    public LocalDateTime getPasswordResetTokenExpiryDate() {
+        return passwordResetTokenExpiryDate;
+    }
+
+    public void setPasswordResetTokenExpiryDate(LocalDateTime passwordResetTokenExpiryDate) {
+        this.passwordResetTokenExpiryDate = passwordResetTokenExpiryDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+	public Long getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
+
+
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+
+
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+	
+}
